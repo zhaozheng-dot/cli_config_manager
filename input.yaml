@@ -1,0 +1,41 @@
+# input.yaml - 包含正面和负面测试用例
+
+# Case 1: 完美数据 (Admin)
+- name: "Alice Administrator"
+  email: "alice@company.com" # 符合 Admin 规则
+  age: 35
+  role: "admin"
+  website: "https://admin-portal.company.com"
+
+# Case 2: 完美数据 (Viewer, 最小字段集)
+- name: "Bob Viewer"
+  email: "bob@gmail.com"
+  age: 22
+  role: "viewer"
+  # website 是可选的，这里省略
+
+# Case 3: 格式错误 - Email 非法
+- name: "Charlie Chaos"
+  email: "not-an-email" # Pydantic EmailStr 将拦截此错误
+  age: 40
+  role: "editor"
+
+# Case 4: 范围错误 - Age < 18
+- name: "Baby Yoda"
+  email: "yoda@force.net"
+  age: 5  # Field(ge=18) 将拦截此错误
+  role: "viewer"
+
+# Case 5: 业务逻辑错误 - Admin 邮箱非公司域名
+- name: "Evil Hacker"
+  email: "hacker@anonymous.org"
+  age: 50
+  role: "admin" # Admin 要求 @company.com，这里将触发 model_validator
+  website: "http://hacker.com"
+
+# Case 6: 格式错误 - URL 协议不支持
+- name: "Dave Developer"
+  email: "dave@dev.io"
+  age: 28
+  role: "editor"
+  website: "ftp://files.dev.io" # field_validator 拦截，要求 http/https

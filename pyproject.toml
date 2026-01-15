@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cli_config_manager"
+version = "0.1.0"
+description = "CLI Configuration Manager"
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+	"annotated-types==0.7.0",# 为类型注解提供工具/Utilities for type annotations
+	"click==8.3.1",# 命令行界面创建工具/Command Line Interface Creation Kit
+	"colorama==0.4.6",# 跨平台彩色终端文本/Cross-platform colored terminal text
+	"dnspython==2.8.0",# DNS工具包/DNS toolkit
+	"email-validator==2.3.0",# 电子邮件地址验证/Email address validation
+	"idna==3.11",# 国际化域名应用支持/Internationalized Domain Names in Applications support
+	"markdown-it-py==4.0.0",# Markdown解析器/Markdown parser
+	"mdurl==0.1.2",# URL标记化与操作/URL tokenization and manipulation
+	"pydantic==2.12.5",# 数据验证与设置管理/Data validation and settings management
+	"pydantic_core==2.41.5",# Pydantic的核心引擎/Pydantic's core engine
+	"Pygments==2.19.2",# 语法高亮工具/Syntax highlighting tool
+	"PyYAML==6.0.1",# YAML解析器与发射器/YAML parser and emitter
+	"rich==13.9.4",# 富文本终端格式化/Rich text and beautiful formatting in the terminal
+	"shellingham==1.5.4",# 检测当前shell环境/Detect what shell the current program is running in
+	"typer==0.9.0",# 构建CLI应用/Build CLI applications
+	"typing-inspection==0.4.2",# 运行时类型检查工具/Runtime inspection utilities for typing
+	"typing_extensions==4.15.0" # 向后兼容的类型提示/Backported and experimental type hints
+
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "black>=22.0.0",
+    "isort>=5.0.0"
+]
+
