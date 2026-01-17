@@ -18,12 +18,14 @@ class DataProcessor:
 
     def load_raw_data(self) -> List[Any]:
         """
-        读取 YAML 或 JSON 文件，返回原始的字典列表。
+        读取 YAML 或 JSON 文件，返回原始的列表。
         """
         if not self.file_path.exists():
             raise FileNotFoundError(f"File not found: {self.file_path}")
 
         # 确保文件句柄自动关闭 (try-with-resources)
+        # 'r': 只读（默认）。
+        # 'w': 写入（会先清空文件）。
         with open(self.file_path, 'r', encoding='utf-8') as f:
             if self.file_path.suffix.lower() in ['.yaml', '.yml']:
                 content = yaml.safe_load(f)
@@ -32,7 +34,14 @@ class DataProcessor:
             else:
                 raise ValueError("Unsupported file format. Use .yaml or .json")
 
-        return content if isinstance(content, list) else []
+        # 检查从文件读取的内容是否是 list 类型，如果不是，返回空列表
+        #  应该优化，当读取的内容是不是 list 类型时，抛出异常，显示提醒
+
+        # 更严格的校验：如果不是列表就抛出异常
+        if not isinstance(content, list):
+            raise ValueError(f"Expected list data structure, got {type(content).__name__}")
+
+        return content
 
     def process_data(self) -> Tuple[List[User], List[Dict[str, Any]]]:
         """
@@ -46,6 +55,7 @@ class DataProcessor:
             try:
                 # 字典解包转换为 Pydantic 模型
                 user = User(**entry)
+
                 valid_users.append(user)
             except ValidationError as e:
                 error_record = {

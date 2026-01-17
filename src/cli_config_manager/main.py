@@ -9,7 +9,7 @@ from rich.table import Table
 from rich import print as rprint
 
 # 引入内部模块
-from .processor import DataProcessor
+from cli_config_manager.processor import DataProcessor
 
 # 初始化 Typer 应用对象
 # Java 类比: SpringApplication 或 Picocli 的 CommandLine 对象
@@ -30,9 +30,14 @@ console = Console()
 # -----------------------------------------------------------------------------
 @app.command()
 def clean(
+
+        # 1、Annotated[T, metadata] 是 Python 3.9+ 引入的类型注解语法
+        #T2、 是参数的实际类型（如 Path, str, int 等）
+        #3、metadata 是 Typer 的配置信息（如 typer.Argument() 或 typer.Option()）
+
         # 参数定义：使用 Annotated + typer.Argument/Option
         # input_file 是位置参数 (Argument)，必须提供
-        input_file: Annotated,
+        input_file: Annotated[Path, typer.Argument(help="输入文件路径")],
         # output_file 是选项参数 (Option)，有默认值
         output_file: Annotated[
             Path,
@@ -41,11 +46,11 @@ def clean(
                 help="清洗后数据的输出路径"
             )
         ] = Path("cleaned_data.json"),
-        # verbose 是布尔开关 (Flag)
+        # verbose 是布尔开关 (Flag) # 标志参数
         verbose: bool = typer.Option(False, "--verbose", "-v", help="显示详细日志")
 ):
     """
-    执行数据清洗主流程。
+    执行数据清洗主流程。# 这个文档字符串会成为命令描述
     """
     # 打印分割线
     console.rule("[bold blue]Data Cleaner Engine[/bold blue]")
@@ -101,5 +106,34 @@ def clean(
 # 程序入口
 # Java 类比: public static void main(String args)
 # -----------------------------------------------------------------------------
+
+"""
+这个代码片段是 Python 程序的入口点，相当于 Java 中的 public static void main(String[] args) 方法。
+
+具体作用：
+
+条件执行：if __name__ == "__main__": 确保这段代码只在直接运行此脚本时执行，而不是在被导入为模块时执行。
+
+启动 CLI 应用：app() 调用 Typer 应用对象，它会：
+
+解析命令行参数
+根据用户输入的命令（如 
+clean
+）执行对应的函数
+处理参数验证和错误信息
+提供帮助信息（当用户输入 --help 时）
+"""
+
 if __name__ == "__main__":
     app()
+
+##################################编程疑问记录###################################################
+
+
+# 问：为什么我执行 python src\cli_config_manager\main.py input.yaml 函数后默认执行 Clean方法？
+"""
+  答：Typer 底层使用 Click 库，当只有一个命令时，Click 会将其设为默认命令。
+        在你的代码中，clean函数是唯一被 @app.command() 装饰的函数，所以它成为了默认命令。
+ 
+        当存在两个时候，使用命令执行时候，必须显式的给出 option，或者 修改typer.Typer()配置来强制显式调用option
+"""

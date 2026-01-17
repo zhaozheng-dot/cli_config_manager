@@ -98,14 +98,17 @@ class User(BaseModel):
     @field_validator('website')
     @classmethod
     def check_website_scheme(cls, v: Optional[HttpUrl]) -> Optional[HttpUrl]:
-        """
-        验证 website 是否使用 http 或 https 协议。
+        """业务逻辑
+         1、如果用户没有提供网站（website=None），不验证，直接返回 None
+         2、如果存在website 验证是否使用 http 或 https 协议。
         注意：虽然 HttpUrl 类型本身已经隐含了协议检查，但这里演示如何扩展逻辑。
 
         参数:
             cls: 类本身 (User.class)
             v: 待验证的值
         """
+        # 必要的边界检查，避免在 None 上访问 .scheme 属性导致 AttributeError
+        # Python 的短路求值可精简该逻辑代码
         if v is None:
             return v
         # Pydantic V2 中 HttpUrl 是一个对象，有 scheme 属性

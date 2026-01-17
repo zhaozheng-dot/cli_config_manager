@@ -23,7 +23,7 @@ dependencies = [
 	"PyYAML==6.0.1",# YAML解析器与发射器/YAML parser and emitter
 	"rich==13.9.4",# 富文本终端格式化/Rich text and beautiful formatting in the terminal
 	"shellingham==1.5.4",# 检测当前shell环境/Detect what shell the current program is running in
-	"typer==0.9.0",# 构建CLI应用/Build CLI applications
+	"typer==0.21.1",# 构建CLI应用/Build CLI applications
 	"typing-inspection==0.4.2",# 运行时类型检查工具/Runtime inspection utilities for typing
 	"typing_extensions==4.15.0" # 向后兼容的类型提示/Backported and experimental type hints
 
@@ -36,3 +36,5 @@ dev = [
     "isort>=5.0.0"
 ]
 
+[tool.setuptools.packages.find]
+where = ["src"]
